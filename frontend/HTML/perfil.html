@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+
+
+
+<head>
+    <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tic Task - Perfil</title>
+
+
+
+
+    <link rel="stylesheet" href="../CSS/style.css" />
+    <link rel="stylesheet" href="../CSS/perfil.css" />
+</head>
+
+
+
+
+<body>
+    <div class="app">
+
+
+
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <a class="logo" href="#">Tic Task</a>
+
+
+
+
+            <nav class="sidebar-menu">
+                <h3>Menu</h3>
+                <ul>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="perfil.html" class="active">Perfil</a></li>
+                    <li><a href="login.html" onclick="localStorage.clear()">Sair</a></li>
+                </ul>
+            </nav>
+
+
+
+
+            <div class="user-profile-widget">
+                <div class="profile-pic" id="sidebar-avatar">U</div>
+                <div class="user-info">
+                    <span class="user-name" id="profile-name-sidebar">Usuário</span>
+                    <a href="perfil.html">Ver perfil</a>
+                </div>
+            </div>
+        </aside>
+
+
+
+
+        <!-- MAIN CONTENT -->
+        <main class="content">
+
+
+
+
+            <h1 class="page-title">Meu Perfil</h1>
+
+
+
+
+            <!-- MENSAGEM GLOBAL DO PERFIL -->
+            <div id="profile-message" class="form-message" style="display:none;"></div>
+
+
+
+
+            <!-- CARD: DADOS PESSOAIS -->
+            <section class="profile-card">
+                <h2>Dados Pessoais</h2>
+
+
+
+
+                <form id="profile-form">
+
+
+
+
+                    <div class="input-group">
+                        <label for="nome">Nome</label>
+                        <input type="text" id="nome" required>
+                    </div>
+
+
+
+
+                    <div class="input-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" required>
+                    </div>
+
+
+
+
+                    <button class="cta-button" type="submit">Salvar Alterações</button>
+                </form>
+            </section>
+
+
+
+
+            <!-- CARD: ALTERAR SENHA -->
+            <section class="profile-card">
+                <h2>Alterar Senha</h2>
+
+
+
+
+                <form id="password-form">
+
+
+
+
+                    <div class="input-group">
+                        <label for="senha-atual">Senha atual</label>
+                        <input type="password" id="senha-atual" required>
+                    </div>
+
+
+
+
+                    <div class="input-group">
+                        <label for="nova-senha">Nova senha</label>
+                        <input type="password" id="nova-senha" required>
+                    </div>
+
+
+
+
+                    <button class="cta-button" type="submit">Atualizar Senha</button>
+                </form>
+            </section>
+
+
+
+
+            <!-- CARD: EXCLUIR CONTA -->
+            <section class="profile-card danger-card">
+                <h2>Excluir Conta</h2>
+
+
+
+
+                <p>Esta ação é permanente e não poderá ser desfeita.</p>
+
+
+
+
+                <button id="delete-account-btn" class="danger-button">
+                    Excluir minha conta
+                </button>
+            </section>
+
+
+
+
+        </main>
+    </div>
+
+
+
+
+    <script type="module" src="../JS/perfil.js"></script>
+</body>
+
+
+
+
+</html>

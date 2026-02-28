@@ -1,0 +1,156 @@
+/* -------------------- VARIÁVEIS DE ESTILO -------------------- */
+:root {
+    --cor-primaria: #4a90e2;
+    --cor-primaria-escura: #357ac8;
+    --cor-bg: #f4f6fa;
+    --cor-branco: #fff;
+    --cor-texto: #333;
+    --cor-borda: #dcdcdc;
+    --radius: 8px;
+    --shadow: 0 4px 12px rgba(0,0,0,0.08);
+    --transition: 0.2s ease;
+}
+
+
+
+
+/* -------------------- RESET -------------------- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Inter", sans-serif;
+}
+
+
+
+
+body {
+    background: var(--cor-bg);
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+
+/* -------------------- CONTAINER DE LOGIN -------------------- */
+.login-container {
+    width: 360px;
+    background: var(--cor-branco);
+    padding: 35px 30px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    text-align: center;
+}
+
+
+
+
+.login-container h1 {
+    margin-bottom: 20px;
+    color: var(--cor-texto);
+}
+
+
+
+
+/* -------------------- CAMPOS DO FORM -------------------- */
+form input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--radius);
+    margin-bottom: 12px;
+    font-size: 15px;
+    transition: var(--transition);
+}
+
+
+
+
+form input:focus {
+    border-color: var(--cor-primaria);
+    outline: none;
+}
+
+
+
+
+/* BOTÃO */
+button {
+    width: 100%;
+    padding: 12px;
+    background: var(--cor-primaria);
+    border: none;
+    border-radius: var(--radius);
+    color: var(--cor-branco);
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 5px;
+    transition: var(--transition);
+}
+
+
+
+
+button:hover {
+    background: var(--cor-primaria-escura);
+}
+
+
+
+
+/* -------------------- LINK PARA CADASTRO -------------------- */
+.login-container p {
+    margin-top: 12px;
+    font-size: 14px;
+}
+
+
+
+
+.login-container a {
+    color: var(--cor-primaria);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+
+
+
+.login-container a:hover {
+    text-decoration: underline;
+}
+
+
+
+
+/* -------------------- MENSAGENS -------------------- */
+.message {
+    display: none;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: var(--radius);
+    font-size: 14px;
+}
+
+
+
+
+.success {
+    background: #d4f7d4;
+    color: #2d7a34;
+}
+
+
+
+
+.error {
+    background: #ffd4d4;
+    color: #8a1e1e;
+}
+
+

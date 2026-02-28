@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tic Task - Dashboard</title>
+
+
+
+
+    <link rel="stylesheet" href="../CSS/style.css" />
+</head>
+<body>
+
+
+
+
+<div class="app">
+
+
+
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" aria-label="Barra lateral">
+        <a class="logo" href="#">Tic Task</a>
+
+
+
+
+        <nav class="sidebar-menu" aria-label="Menu principal">
+            <h3>Menu</h3>
+            <ul>
+                <li><a href="dashboard.html" class="active">Dashboard</a></li>
+                <li><a href="perfil.html">Perfil</a></li>
+                <li><a href="login.html" onclick="localStorage.clear()">Sair</a></li>
+            </ul>
+        </nav>
+
+
+
+
+        <div class="user-profile-widget" aria-hidden="false">
+            <div class="profile-pic" id="sidebar-avatar">U</div>
+            <div class="user-info">
+                <!-- Nome atualizado dinamicamente -->
+                <span class="user-name" id="profile-name-sidebar">Carregando...</span>
+                <a href="perfil.html">Ver perfil</a>
+            </div>
+        </div>
+    </aside>
+
+
+
+
+    <!-- MAIN CONTENT -->
+    <main class="content" role="main">
+
+
+
+
+        <!-- Header -->
+        <div class="content-header">
+            <div>
+                <h1 id="welcome-title" class="page-title">Minhas Tarefas</h1>
+                <p class="subtitle">Organize suas tarefas — rápido e simples.</p>
+            </div>
+
+
+
+
+            <div class="header-actions">
+                <button class="secondary" id="manage-categories-btn" type="button">Categorias</button>
+                <button class="cta-button" id="add-task-btn" type="button">Nova Tarefa</button>
+            </div>
+        </div>
+
+
+
+
+        <!-- Filtros -->
+        <nav class="filters" id="category-filters" aria-label="Filtros de categoria">
+            <a href="#" class="filter-link active" data-filter="todos">Todos</a>
+        </nav>
+
+
+
+
+        <!-- LISTAGEM -->
+        <section class="list-view-container" aria-label="Lista de tarefas">
+            <div class="list-view-header">
+                <span></span>
+                <span>Tarefas</span>
+                <span>Categoria</span>
+                <span>Data</span>
+                <span>Ações</span>
+            </div>
+
+
+
+
+            <div id="task-list-area"></div>
+        </section>
+
+
+
+
+    </main>
+</div>
+
+
+
+
+<!-- MODAL TAREFA -->
+<div id="task-modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-content">
+        <h2 id="modal-title">Nova Tarefa</h2>
+
+
+
+
+        <form id="task-form" autocomplete="off">
+            <input type="hidden" id="task-id" />
+
+
+
+
+            <div class="input-group">
+                <label for="task-title-input">Título</label>
+                <input type="text" id="task-title-input" required />
+            </div>
+
+
+
+
+            <div class="input-group">
+                <label for="task-description">Descrição</label>
+                <textarea id="task-description"></textarea>
+            </div>
+
+
+
+
+            <div class="input-group">
+                <label for="task-category-input">Categoria</label>
+                <div class="row-inline">
+                    <select id="task-category-input" style="flex:1;">
+                        <option value="">Sem categoria</option>
+                    </select>
+                    <button type="button" id="create-category-btn" class="secondary" title="Criar nova categoria">+</button>
+                </div>
+            </div>
+
+
+
+
+            <div class="input-group">
+                <label for="task-dueDate">Data limite</label>
+                <input type="date" id="task-dueDate" />
+            </div>
+
+
+
+
+            <div class="modal-actions">
+                <button type="button" class="secondary" id="modal-cancel-btn">Cancelar</button>
+                <button type="submit" class="cta-button" id="modal-submit-btn">Salvar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+
+<!-- MODAL CATEGORIA -->
+<div id="category-modal" class="modal" role="dialog" aria-hidden="true">
+    <div class="modal-content">
+        <h2>Nova Categoria</h2>
+
+
+
+
+        <form id="category-form">
+            <div class="input-group">
+                <label for="category-name-input">Nome da Categoria</label>
+                <input type="text" id="category-name-input" required />
+            </div>
+
+
+
+
+            <div class="modal-actions">
+                <button type="button" id="category-cancel-btn" class="secondary">Cancelar</button>
+                <button type="submit" class="cta-button">Criar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+
+<!-- MODAL GERENCIAR CATEGORIAS -->
+<div id="manage-categories-modal" class="modal" role="dialog" aria-hidden="true">
+    <div class="modal-content" style="max-width: 560px;">
+        <h2>Gerenciar Categorias</h2>
+
+
+
+
+        <div id="categories-list"></div>
+
+
+
+
+        <div style="display:flex; justify-content:flex-end; margin-top:12px;">
+            <button id="close-manage-categories" class="secondary">Fechar</button>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- MODAL EDITAR CATEGORIA -->
+<div id="edit-category-modal" class="modal" role="dialog" aria-hidden="true">
+    <div class="modal-content" style="max-width: 480px;">
+        <h2>Editar Categoria</h2>
+
+
+
+
+        <form id="edit-category-form">
+            <input type="hidden" id="edit-category-id" />
+
+
+
+
+            <div class="input-group">
+                <label for="edit-category-name">Novo nome</label>
+                <input type="text" id="edit-category-name" required />
+            </div>
+
+
+
+
+            <div class="modal-actions">
+                <button type="button" id="edit-category-cancel" class="secondary">Cancelar</button>
+                <button type="submit" class="cta-button">Salvar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+
+<!-- SCRIPTS -->
+<!-- Removido o 'defer' para garantir que o nome seja carregado corretamente -->
+<script type="module" src="../JS/dashboard.js"></script>
+
+
+
+
+</body>
+</html>

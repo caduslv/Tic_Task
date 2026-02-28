@@ -1,0 +1,161 @@
+/* -------------------- VARIÁVEIS DO TEMA (herda do style.css) -------------------- */
+:root {
+    --radius: 8px;
+    --shadow: 0 4px 12px rgba(0,0,0,0.08);
+    --transition: 0.2s ease;
+}
+
+
+
+
+/* -------------------- LAYOUT GERAL DO PERFIL -------------------- */
+.content {
+    padding: 35px;
+}
+
+
+
+
+.page-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 25px;
+}
+
+
+
+
+/* -------------------- CARDS -------------------- */
+.profile-card {
+    background: var(--cor-branco);
+    padding: 25px;
+    border-radius: var(--radius);
+    box-shadow: var(--sombra);
+    margin-bottom: 30px;
+}
+
+
+
+
+.profile-card h2 {
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+
+
+
+/* -------------------- CAMPOS -------------------- */
+.profile-card .input-group {
+    margin-bottom: 15px;
+}
+
+
+
+
+.profile-card label {
+    font-weight: 600;
+    margin-bottom: 5px;
+    display: block;
+}
+
+
+
+
+.profile-card input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--radius);
+    transition: var(--transition);
+    font-size: 15px;
+}
+
+
+
+
+.profile-card input:focus {
+    border-color: var(--cor-primaria);
+    outline: none;
+}
+
+
+
+
+/* -------------------- BOTÕES -------------------- */
+.cta-button {
+    background: var(--cor-primaria);
+    color: var(--cor-branco);
+    border: none;
+    padding: 12px 18px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 15px;
+    transition: var(--transition);
+}
+
+
+
+
+.cta-button:hover {
+    background: var(--cor-primaria-escura);
+}
+
+
+
+
+/* BOTÃO PERIGOSO */
+.danger-button {
+    background: #ff4d4d;
+    color: #fff;
+    padding: 12px 18px;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 15px;
+    transition: var(--transition);
+}
+
+
+
+
+.danger-button:hover {
+    background: #d93636;
+}
+
+
+
+
+.danger-card {
+    border-left: 4px solid #ff4d4d;
+}
+
+
+
+
+/* -------------------- SISTEMA DE MENSAGENS -------------------- */
+.form-message {
+    display: none;
+    padding: 12px;
+    margin-bottom: 20px;
+    border-radius: var(--radius);
+    font-size: 14px;
+}
+
+
+
+
+.form-message.success {
+    background: #d4f7d4;
+    color: #2d7a34;
+}
+
+
+
+
+.form-message.error {
+    background: #ffd6d6;
+    color: #7b1d1d;
+}
+
+
