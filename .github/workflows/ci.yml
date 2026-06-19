@@ -34,9 +34,11 @@ jobs:
           node-version: '20'
 
       - name: Install dependencies
+        working-directory: backend
         run: npm install
 
       - name: Run Test
+        working-directory: backend
         run: npm test
         env:
           DB_HOST: 127.0.0.1
