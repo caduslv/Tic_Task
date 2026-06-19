@@ -39,7 +39,7 @@ jobs:
 
       - name: Run Test
         working-directory: backend
-        run: npx jest --runInBand --detectOpenHandles # Usar 'npx jest' força o uso do Jest instalado localmente
+        run: npm test -- --clearCache
         env:
           DB_HOST: 127.0.0.1
           DB_USER: root
