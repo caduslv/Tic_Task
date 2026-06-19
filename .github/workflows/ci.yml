@@ -35,11 +35,11 @@ jobs:
 
       - name: Install dependencies
         working-directory: backend
-        run: npm install
+        run: npm ci  # 'npm ci' é mais rápido e confiável para CI/CD que 'npm install'
 
       - name: Run Test
         working-directory: backend
-        run: npm test
+        run: npx jest --runInBand --detectOpenHandles # Usar 'npx jest' força o uso do Jest instalado localmente
         env:
           DB_HOST: 127.0.0.1
           DB_USER: root
