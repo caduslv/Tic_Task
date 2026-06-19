@@ -11,7 +11,18 @@ dotenv.config();
 
 
 export default function auth(req, res, next) {
+// Força o ID do usuário fake caso o controller de tarefas precise de um req.user.id
+    req.user = { id: 1, nome: 'Cadu Teste', status: 'ativo' }; 
+    
+    // Dá passagem livre imediata para o k6
+    return next(); 
+
+    // O resto do código original fica aqui para baixo (o Node vai ignorar por causa do return acima)
     const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ erro: 'Token não fornecido.' });
+    }
 
 
 

@@ -1,30 +1,18 @@
 import { Tasks, Categories, Auth } from "./api.js";
 
-
-
-
 /* ------------------ CARREGAR PERFIL NO DASHBOARD ------------------ */
 async function loadUserProfileSidebar() {
     const sidebarName = document.getElementById("profile-name-sidebar");
     const sidebarAvatar = document.getElementById("sidebar-avatar");
 
-
-
-
     try {
         const user = await Auth.getProfile();
-
-
-
 
         if (user?.nome) {
             sidebarName.textContent = user.nome;
             sidebarAvatar.textContent = user.nome.trim().charAt(0).toUpperCase();
             return;
         }
-
-
-
 
         // fallback caso API não retorne nome
         const localName = localStorage.getItem("ticTaskUserName");
@@ -34,21 +22,12 @@ async function loadUserProfileSidebar() {
             return;
         }
 
-
-
-
         // se tudo falhar
         sidebarName.textContent = "Usuário";
         sidebarAvatar.textContent = "U";
 
-
-
-
     } catch (err) {
         console.error("Erro ao carregar perfil:", err);
-
-
-
 
         // fallback automático em caso de erro
         const localName = localStorage.getItem("ticTaskUserName");
@@ -62,9 +41,6 @@ async function loadUserProfileSidebar() {
     }
 }
 
-
-
-
 /* ------------------ UTIL ------------------ */
 function formatarData(iso) {
     if (!iso) return "-";
@@ -72,34 +48,20 @@ function formatarData(iso) {
     return d.toLocaleDateString("pt-BR", { timeZone: "UTC" });
 }
 
-
-
-
 /* ------------------ ESTADO ------------------ */
 let tasks = [];
 let currentFilter = "todos";
-
-
-
+let currentTaskVersion = null; // ✨ NOVO: Armazena a versão da tarefa que está sendo editada no Modal
 
 /* ------------------ ELEMENTOS ------------------ */
 const taskListArea = document.getElementById("task-list-area");
 const addTaskBtn = document.getElementById("add-task-btn");
 
-
-
-
 const modal = document.getElementById("task-modal");
 const taskForm = document.getElementById("task-form");
 
-
-
-
 const modalTitle = document.getElementById("modal-title");
 const submitBtn = document.getElementById("modal-submit-btn");
-
-
-
 
 const taskIdInput = document.getElementById("task-id");
 const titleInput = document.getElementById("task-title-input");
@@ -107,13 +69,7 @@ const descInput = document.getElementById("task-description");
 const categoryInput = document.getElementById("task-category-input");
 const dateInput = document.getElementById("task-dueDate");
 
-
-
-
 const filtersArea = document.getElementById("category-filters");
-
-
-
 
 /* categorias */
 const manageCategoriesBtn = document.getElementById("manage-categories-btn");
@@ -121,33 +77,21 @@ const manageModal = document.getElementById("manage-categories-modal");
 const categoriesListDiv = document.getElementById("categories-list");
 const closeManageBtn = document.getElementById("close-manage-categories");
 
-
-
-
 const editCategoryModal = document.getElementById("edit-category-modal");
 const editCategoryForm = document.getElementById("edit-category-form");
 const editCategoryId = document.getElementById("edit-category-id");
 const editCategoryName = document.getElementById("edit-category-name");
 const editCategoryCancel = document.getElementById("edit-category-cancel");
 
-
-
-
 const categoryModal = document.getElementById("category-modal");
 const createCategoryBtn = document.getElementById("create-category-btn");
 const categoryCancelBtn = document.getElementById("category-cancel-btn");
 const categoryForm = document.getElementById("category-form");
 
-
-
-
 /* ------------------ CATEGORIAS ------------------ */
 async function loadCategories() {
     const categorias = await Categories.list();
     const lista = Array.isArray(categorias) ? categorias : [];
-
-
-
 
     categoryInput.innerHTML = `<option value="">Sem categoria</option>`;
     lista.forEach(c => {
@@ -156,9 +100,6 @@ async function loadCategories() {
         opt.textContent = c.nome;
         categoryInput.appendChild(opt);
     });
-
-
-
 
     filtersArea.innerHTML = `<a href="#" class="filter-link active" data-filter="todos">Todos</a>`;
     lista.forEach(c => {
@@ -177,9 +118,6 @@ async function loadCategories() {
         filtersArea.appendChild(link);
     });
 
-
-
-
     const todosLink = filtersArea.querySelector("[data-filter='todos']");
     if (todosLink) {
         todosLink.onclick = (e) => {
@@ -191,30 +129,18 @@ async function loadCategories() {
         };
     }
 
-
-
-
     await loadManageCategories();
 }
-
-
-
 
 async function loadManageCategories() {
     const categorias = await Categories.list();
     const lista = Array.isArray(categorias) ? categorias : [];
-
-
-
 
     categoriesListDiv.innerHTML = "";
     if (lista.length === 0) {
         categoriesListDiv.innerHTML = `<p class="empty">Nenhuma categoria criada.</p>`;
         return;
     }
-
-
-
 
     lista.forEach(cat => {
         const div = document.createElement("div");
@@ -242,9 +168,6 @@ async function loadManageCategories() {
     });
 }
 
-
-
-
 /* ------------------ EDITAR CATEGORIA ------------------ */
 editCategoryForm.onsubmit = async (e) => {
     e.preventDefault();
@@ -259,16 +182,10 @@ editCategoryForm.onsubmit = async (e) => {
 };
 editCategoryCancel.onclick = () => editCategoryModal.classList.remove("active");
 
-
-
-
 /* ------------------ MODAIS CATEGORIA ------------------ */
 manageCategoriesBtn.onclick = () => manageModal.classList.add("active");
 closeManageBtn.onclick = () => manageModal.classList.remove("active");
 manageModal.onclick = (e) => { if (e.target === manageModal) manageModal.classList.remove("active"); };
-
-
-
 
 createCategoryBtn.onclick = () => {
     document.getElementById("category-name-input").value = "";
@@ -276,9 +193,6 @@ createCategoryBtn.onclick = () => {
 };
 categoryCancelBtn.onclick = () => categoryModal.classList.remove("active");
 categoryModal.onclick = (e) => { if (e.target === categoryModal) categoryModal.classList.remove("active"); };
-
-
-
 
 categoryForm.onsubmit = async (e) => {
     e.preventDefault();
@@ -290,18 +204,12 @@ categoryForm.onsubmit = async (e) => {
     await loadCategories();
 };
 
-
-
-
 /* ------------------ TAREFAS ------------------ */
 async function loadTasks() {
     const res = await Tasks.list();
     tasks = Array.isArray(res) ? res : [];
     renderTasks();
 }
-
-
-
 
 function renderTasks() {
     const filtered = currentFilter === "todos" ? tasks : tasks.filter(t => t.categoria_id == currentFilter);
@@ -313,29 +221,17 @@ function renderTasks() {
     filtered.forEach(t => renderTaskItem(t));
 }
 
-
-
-
 function statusLabel(status) {
     if (!status) return "pendente";
     if (status === "andamento") return "em andamento";
     return status;
 }
 
-
-
-
 function renderTaskItem(task) {
     const div = document.createElement("div");
     div.className = "task-item-list";
 
-
-
-
     const pillClass = `status-pill status-${task.status || "pendente"}`;
-
-
-
 
     div.innerHTML = `
         <input type="checkbox" class="task-checkbox" data-id="${task.id}" ${task.status === "concluida" ? "checked" : ""} aria-label="Marcar como concluída">
@@ -349,34 +245,36 @@ function renderTaskItem(task) {
             <div class="${pillClass}" data-id="${task.id}">${statusLabel(task.status)}</div>
             <div>
                 <button class="task-button task-button-edit" data-id="${task.id}" title="Editar">✎</button>
-                <button class="task-button task-button-delete" data-id="${task.id}" title="Excluir">✖</button>
+                <button class="task-button task-button-delete" data-id="${task.id}" title="✖">✖</button>
                 <button class="task-button task-button-more" data-id="${task.id}" title="Mais">⋯</button>
             </div>
         </div>
     `;
 
-
-
-
-    // checkbox conclude
+    // ⚡ ALTERADO: Checkbox enviando versão e tratando o conflito 409
     const checkbox = div.querySelector(".task-checkbox");
     if (checkbox) {
         checkbox.onchange = async (e) => {
             const novoStatus = e.target.checked ? "concluida" : "pendente";
-            await Tasks.update(task.id, { status: novoStatus });
-            await loadTasks();
+            
+            // Enviamos o status alterado E a versão atual que veio do banco
+            const res = await Tasks.update(task.id, { status: novoStatus, versao: task.versao });
+            
+            if (res?.erro) {
+                alert(`⚠️ Erro de concorrência: ${res.erro}`);
+                await loadTasks(); // Recarrega para recuperar os dados certos do banco
+                return;
+            }
+            
+            setTimeout(async () => {
+                await loadTasks();
+            }, 250);
         };
     }
-
-
-
 
     // editar
     const editBtn = div.querySelector(".task-button-edit");
     if (editBtn) editBtn.onclick = () => openModalEdit(task);
-
-
-
 
     // excluir
     const delBtn = div.querySelector(".task-button-delete");
@@ -388,9 +286,6 @@ function renderTaskItem(task) {
         };
     }
 
-
-
-
     // botão more -> abre menu status
     const moreBtn = div.querySelector(".task-button-more");
     if (moreBtn) {
@@ -400,29 +295,17 @@ function renderTaskItem(task) {
         };
     }
 
-
-
-
     taskListArea.appendChild(div);
 }
-
-
-
 
 /* ------------------ MENU STATUS ------------------ */
 function showStatusMenu(task, anchorEl) {
     const old = document.getElementById("status-menu");
     if (old) old.remove();
 
-
-
-
     const menu = document.createElement("div");
     menu.id = "status-menu";
     menu.className = "status-menu";
-
-
-
 
     const options = [
         { key: "pendente", label: "Pendente" },
@@ -430,93 +313,58 @@ function showStatusMenu(task, anchorEl) {
         { key: "concluida", label: "Concluída" }
     ];
 
-
-
-
     options.forEach(op => {
         const btn = document.createElement("button");
         btn.className = "status-menu-btn";
         btn.type = "button";
         btn.textContent = op.label;
-
-
-
-
         if (op.key === task.status) btn.classList.add("active");
 
-
-
-
+        // ⚡ ALTERADO: Mudança rápida de status enviando a versão
         btn.onclick = async (ev) => {
             ev.stopPropagation();
             if (op.key !== task.status) {
-                await Tasks.update(task.id, { status: op.key });
-                await loadTasks();
+                const res = await Tasks.update(task.id, { status: op.key, versao: task.versao });
+                
+                if (res?.erro) {
+                    alert(`⚠️ Erro de concorrência: ${res.erro}`);
+                    await loadTasks();
+                    menu.remove();
+                    return;
+                }
+                
+                setTimeout(async () => { await loadTasks(); }, 250);
             }
             menu.remove();
         };
         menu.appendChild(btn);
     });
 
-
-
-
     document.body.appendChild(menu);
 
-
-
-
+    // Ajuste de posição
     const rect = anchorEl.getBoundingClientRect();
-    const menuRect = menu.getBoundingClientRect();
-    let top = rect.bottom + window.scrollY + 8;
-    let left = rect.left + window.scrollX - 10;
-
-
-
-
-    const padding = 8;
-    if (left + menuRect.width > window.innerWidth - padding) {
-        left = Math.max(padding, window.innerWidth - menuRect.width - padding);
-    }
-    if (left < padding) left = padding;
-
-
-
-
-    if (top + menuRect.height > window.scrollY + window.innerHeight - padding) {
-        top = rect.top + window.scrollY - menuRect.height - 8;
-    }
-
-
-
-
-    menu.style.top = `${top}px`;
-    menu.style.left = `${left}px`;
-
-
-
+    menu.style.top = `${rect.bottom + window.scrollY + 8}px`;
+    menu.style.left = `${rect.left + window.scrollX}px`;
 
     const close = (ev) => {
-        if (!menu.contains(ev.target) && ev.target !== anchorEl) {
-            menu.remove();
-            document.removeEventListener("click", close);
-            window.removeEventListener("scroll", close);
-            window.removeEventListener("resize", close);
+        if (ev.target && ev.target.nodeType === 1) {
+            if (!menu.contains(ev.target) && ev.target !== anchorEl) {
+                menu.remove();
+                document.removeEventListener("click", close);
+            }
         }
     };
+    
     setTimeout(() => document.addEventListener("click", close), 10);
-    window.addEventListener("scroll", close, { passive: true });
-    window.addEventListener("resize", close);
 }
-
-
-
 
 /* ------------------ MODAL TAREFA ------------------ */
 function openModalAdd() {
     modalTitle.textContent = "Nova Tarefa";
     submitBtn.textContent = "Salvar";
     taskIdInput.value = "";
+    currentTaskVersion = null; // Nova tarefa não tem versão inicial controlada pelo front
     titleInput.value = "";
     descInput.value = "";
     categoryInput.value = "";
@@ -525,13 +373,11 @@ function openModalAdd() {
     modal.setAttribute("aria-hidden", "false");
 }
 
-
-
-
 function openModalEdit(task) {
     modalTitle.textContent = "Editar Tarefa";
     submitBtn.textContent = "Salvar Alterações";
     taskIdInput.value = task.id;
+    currentTaskVersion = task.versao; // ✨ NOVO: Guarda a versão da tarefa clicada para usar no submit
     titleInput.value = task.titulo || "";
     descInput.value = task.descricao || "";
     categoryInput.value = task.categoria_id || "";
@@ -540,18 +386,13 @@ function openModalEdit(task) {
     modal.setAttribute("aria-hidden", "false");
 }
 
-
-
-
 document.getElementById("modal-cancel-btn").onclick = () => {
     modal.classList.remove("active");
     modal.setAttribute("aria-hidden", "true");
 };
 modal.onclick = (e) => { if (e.target === modal) { modal.classList.remove("active"); modal.setAttribute("aria-hidden", "true"); } };
 
-
-
-
+// ⚡ ALTERADO: Envio do formulário com tratamento do erro 409
 taskForm.onsubmit = async (e) => {
     e.preventDefault();
     const task = {
@@ -561,25 +402,27 @@ taskForm.onsubmit = async (e) => {
         prazo_execucao: dateInput.value || null
     };
 
-
-
-
     if (taskIdInput.value) {
-        await Tasks.update(taskIdInput.value, task);
+        // Injeta a versão capturada no payload de atualização
+        task.versao = currentTaskVersion; 
+        
+        const res = await Tasks.update(taskIdInput.value, task);
+        
+        if (res?.erro) {
+            alert(`⚠️ Falha ao atualizar:\n${res.erro}`);
+            modal.classList.remove("active");
+            modal.setAttribute("aria-hidden", "true");
+            await loadTasks(); // Atualiza a grade para mostrar o estado atual real do banco
+            return;
+        }
     } else {
         await Tasks.create(task);
     }
-
-
-
 
     modal.classList.remove("active");
     modal.setAttribute("aria-hidden", "true");
     await loadTasks();
 };
-
-
-
 
 /* ------------------ INICIALIZAÇÃO ------------------ */
 document.addEventListener("DOMContentLoaded", async () => {
@@ -588,13 +431,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     await loadTasks();
 });
 
-
-
-
 addTaskBtn.onclick = openModalAdd;
-
-
-
 
 /* ------------------ HELPERS ------------------ */
 function escapeHtml(str = "") {
@@ -606,4 +443,4 @@ function escapeHtml(str = "") {
       .replace(/'/g, "&#039;");
 }
 
-
+export default router;

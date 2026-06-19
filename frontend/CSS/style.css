@@ -253,7 +253,7 @@ body {
 
 .list-view-header {
     display: grid;
-    grid-template-columns: 40px 1fr 130px 130px 110px;
+    grid-template-columns: 40px 1fr 130px 130px 220px;
     padding: 14px;
     border-bottom: 1px solid var(--cor-borda);
     font-weight: bold;
@@ -266,11 +266,12 @@ body {
 
 .task-item-list {
     display: grid;
-    grid-template-columns: 40px 1fr 130px 130px 110px;
+    grid-template-columns: 40px 1fr 130px 130px 220px;
     padding: 14px;
     border-bottom: 1px solid #eee;
     align-items: center;
     transition: var(--transition);
+    position: relative;
 }
 
 
@@ -326,6 +327,8 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
+    position: relative;
+    justify-self: start;
 }
 
 
@@ -563,6 +566,12 @@ textarea {
 /* -------------------- STATUS MENU -------------------- */
 .status-menu {
     position: absolute;
+    grid-column: 4;
+    top: 100%;
+    margin-top: 6px;
+    left: 0;
+    right: auto;
+    right: 0;
     z-index: 9999;
     background: white;
     border: 1px solid var(--cor-borda);

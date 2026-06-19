@@ -3,19 +3,15 @@ import cors from "cors";
 import dotenv from "dotenv";
 import connection from "./config/db.js";
 
-
 // Carrega variáveis do .env
 dotenv.config();
-
 
 // Inicializa o app web
 const app = express();
 
-
 // Middlewares
 app.use(cors());
 app.use(express.json());
-
 
 // Rotas
 import usuariosRoutes from "./routes/usuarios.js";
@@ -23,13 +19,11 @@ import tarefasRoutes from "./routes/tarefas.js";
 import categoriasRoutes from "./routes/categorias.js";
 import adminRoutes from "./routes/admin.js";
 
-
 // Usar rotas
 app.use("/usuarios", usuariosRoutes);
 app.use("/tarefas", tarefasRoutes);
 app.use("/categorias", categoriasRoutes);
 app.use("/admin", adminRoutes);
-
 
 // Teste de banco
 app.get("/teste", (req, res) => {
@@ -39,24 +33,25 @@ app.get("/teste", (req, res) => {
   });
 });
 
-
 // Rota inicial
 app.get("/", (req, res) => {
   res.json({ mensagem: "API TicTask funcionando! 🚀" });
 });
-
 
 // Rota 404
 app.use((req, res) => {
   res.status(404).json({ erro: "Rota não encontrada" });
 });
 
-
 // Porta
 const PORT = process.env.PORT || 3000;
 
+// Inicia servidor (SÓ SE NÃO ESTIVER NO AMBIENTE DE TESTES)
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, () => {
+    console.log(`🚀 Servidor rodando na porta ${PORT}`);
+  });
+}
 
-// Inicia servidor
-app.listen(PORT, () => {
-  console.log(`🚀 Servidor rodando na porta ${PORT}`);
-});
+// Exporta o app para o Supertest conseguir usá-lo
+export default app;

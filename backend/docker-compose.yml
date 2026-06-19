@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:alpine
+    container_name: tic_task_redis
+    ports:
+      - "6379:6379"
+    restart: always
+
+  mysql:
+    image: mysql:8.0
+    container_name: tic_task_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: tic_task_db
+    ports:
+      - "3307:3306"
+    restart: always
