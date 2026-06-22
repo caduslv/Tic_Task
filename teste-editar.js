@@ -1,8 +1,8 @@
 import http from 'k6/http';
 import { check, sleep } from 'k6';
-import exec from 'k6/execution'; // 💡 Nova importação para controlar os usuários
+import exec from 'k6/execution'; // Controla os usuários para o log do locking
 
-// Contador local (agora só o usuário 1 vai mexer nele)
+// Contador local para não inundar o terminal de logs
 let logsExibidos = 0; 
 
 export const options = {
@@ -15,6 +15,7 @@ export const options = {
 };
 
 export default function () {
+  // ATENÇÃO: Altere o final (/3) para um ID válido que exista no seu banco
   const url = 'http://localhost:3000/tarefas/3'; 
   
   const payload = JSON.stringify({
@@ -31,15 +32,16 @@ export default function () {
   
   const res = http.patch(url, payload, params);
 
-  // 💡 MÁGICA AQUI: Verifica se é o VU  nº 1, se foi erro 409, e se ainda não passou de 5 logs
+  // Exibe no console quando a concorrência for barrada com sucesso (Status 409)
   if (exec.vu.idInTest === 1 && res.status === 409 && logsExibidos < 5) {
     console.log(`[LOCKING OTIMISTA] Concorrência barrada! | Status retornado: 409`);
-    logsExibidos++; // Aumenta a conta
+    logsExibidos++; 
   }
 
+  // Tags atualizadas para o padrão mostrar o tipo de rota.
   check(res, {
-    'status e 200 ou 409': (r) => r.status === 200 || r.status === 409,
-    'tempo de resposta < 500ms': (r) => r.timings.duration < 500,
+    'EDITAR (PATCH) - status e 200 ou 409': (r) => r.status === 200 || r.status === 409,
+    'EDITAR (PATCH) - tempo de resposta < 500ms': (r) => r.timings.duration < 500,
   });
 
   sleep(1);

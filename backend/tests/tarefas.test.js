@@ -1,12 +1,11 @@
 import request from "supertest";
 import app from "../server.js";
 
-describe("📝 SUÍTE DE TESTES: Gerenciamento de Tarefas (CRUD)", () => {
+describe("SUÍTE DE TESTES: Gerenciamento de Tarefas (CRUD)", () => {
   let tokenValido = "";
   let tarefaIdCriada = null; // Armazenará o ID dinâmico gerado pelo seu banco
 
   beforeAll(async () => {
-    // Como o seu login dinâmico ainda está dando 401, vamos usar as credenciais fixas que funcionam no seu banco
     const loginRes = await request(app)
       .post("/usuarios/login")
       .send({ email: "cadu@teste.com", senha: "123" }); 

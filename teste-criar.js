@@ -5,7 +5,7 @@ export const options = {
   summaryTrendStats: ['avg', 'min', 'med', 'max', 'p(90)', 'p(95)', 'p(99)'],
   stages: [
     { duration: '10s', target: 10 }, // Sobe para 10 usuários em 10 segundos
-    { duration: '40s', target: 55 }, // Sobe até 55 usuários e segura o estresse
+    { duration: '40s', target: 55 }, // Sobe usuários e segura o estresse (Mude para 939 no teste máximo)
     { duration: '10s', target: 0 },  // Desce a rampa limpando as conexões
   ],
 };
@@ -22,9 +22,10 @@ export default function () {
   const params = { headers: { 'Content-Type': 'application/json' } };
   const res = http.post(url, payload, params);
 
+  // exibe no terminal o tipo de rota.
   check(res, {
-    'status e 201 ou 200': (r) => r.status === 201 || r.status === 200,
-    'tempo de resposta < 500ms': (r) => r.timings.duration < 500,
+    'ESCRITA (POST) - status e 201 ou 200': (r) => r.status === 201 || r.status === 200,
+    'ESCRITA (POST) - tempo de resposta < 500ms': (r) => r.timings.duration < 500,
   });
 
   sleep(1);

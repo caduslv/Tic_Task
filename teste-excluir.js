@@ -1,6 +1,6 @@
 import http from 'k6/http';
 import { check, sleep } from 'k6';
-import exec from 'k6/execution'; // 💡 Controla os logs para não inundar o terminal
+import exec from 'k6/execution'; // Controla os logs para não inundar o terminal
 
 // Contador local para limitar as mensagens no terminal
 let logsExibidos = 0; 
@@ -16,28 +16,28 @@ export const options = {
 
 export default function () {
   // Rota apontando para a tarefa que sofrerá a disputa de exclusão
+  // ATENÇÃO: Altere o final (/3) para um ID válido se for rodar de novo
   const url = 'http://localhost:3000/tarefas/3'; 
   
   const params = { 
     headers: { 
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer SEU_TOKEN_AQUI'
     } 
   };
   
   // Executa o DELETE sem passar payload corpo
   const res = http.del(url, null, params);
 
-  // 💡 MÁGICA DO LOG: Se for o VU nº 1 e o status for 404 (provando que a exclusão concorrente funcionou)
+  // Exibe no console quando a tarefa já tiver sido apagada por outro VU
   if (exec.vu.idInTest === 1 && res.status === 404 && logsExibidos < 5) {
     console.log(`[EXCLUSÃO CONCORRENTE] Tarefa já havia sido deletada! | Status: 404`);
     logsExibidos++; 
   }
 
-  // 💡 CHECAGEM: Aceita 200 (primeiro que deletou) ou 404 (tratamento correto de concorrência)
+  // exibe no terminal o tipo de rota.
   check(res, {
-    'status e 200 ou 404': (r) => r.status === 200 || r.status === 404,
-    'tempo de resposta < 500ms': (r) => r.timings.duration < 500,
+    'DELETAR (DELETE) - status e 200 ou 404': (r) => r.status === 200 || r.status === 404,
+    'DELETAR (DELETE) - tempo de resposta < 500ms': (r) => r.timings.duration < 500,
   });
 
   sleep(1);
