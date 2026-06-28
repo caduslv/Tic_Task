@@ -8,9 +8,9 @@ let logsExibidos = 0;
 export const options = {
   summaryTrendStats: ['avg', 'min', 'med', 'max', 'p(90)', 'p(95)', 'p(99)'],
   stages: [
-    { duration: '10s', target: 10 }, 
-    { duration: '40s', target: 55 }, 
-    { duration: '10s', target: 0 },  
+    { duration: '10s', target: 10 }, // Sobe para 10 usuários em 10 segundos
+    { duration: '40s', target: 55 }, // Sobe até 55 usuários e segura o estresse
+    { duration: '10s', target: 0 },  // Desce a rampa limpando as conexões
   ],
 };
 
@@ -38,7 +38,7 @@ export default function () {
     logsExibidos++; 
   }
 
-  // Tags atualizadas para o padrão mostrar o tipo de rota.
+  // exibe no terminal o tipo de rota.
   check(res, {
     'EDITAR (PATCH) - status e 200 ou 409': (r) => r.status === 200 || r.status === 409,
     'EDITAR (PATCH) - tempo de resposta < 500ms': (r) => r.timings.duration < 500,

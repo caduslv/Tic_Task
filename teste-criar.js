@@ -5,7 +5,7 @@ export const options = {
   summaryTrendStats: ['avg', 'min', 'med', 'max', 'p(90)', 'p(95)', 'p(99)'],
   stages: [
     { duration: '10s', target: 10 }, // Sobe para 10 usuários em 10 segundos
-    { duration: '40s', target: 55 }, // Sobe usuários e segura o estresse (Mude para 939 no teste máximo)
+    { duration: '40s', target: 55 }, // Sobe até 55 usuários e segura o estresse
     { duration: '10s', target: 0 },  // Desce a rampa limpando as conexões
   ],
 };

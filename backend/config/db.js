@@ -3,13 +3,13 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-// Alterado para createPool para suportar os testes de concorrência do k6
+
 const connection = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  port: process.env.DB_PORT || 3306, // 💡 CRÍTICO para o deploy na nuvem
+  port: process.env.DB_PORT || 3306, 
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
@@ -21,8 +21,8 @@ connection.query('SELECT DATABASE() AS banco', (err, result) => {
     console.error('❌ Erro ao conectar ao banco de dados:', err);
     return;
   }
-  console.log('✅ Conexão bem-sucedida com o banco de dados MySQL!');
-  console.log('📦 BANCO USADO PELO NODE:', result[0].banco);
+  console.log(' Conexão bem-sucedida com o banco de dados MySQL!');
+  console.log(' BANCO USADO PELO NODE:', result[0].banco);
 });
 
 export default connection;

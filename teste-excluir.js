@@ -8,15 +8,13 @@ let logsExibidos = 0;
 export const options = {
   summaryTrendStats: ['avg', 'min', 'med', 'max', 'p(90)', 'p(95)', 'p(99)'],
   stages: [
-    { duration: '10s', target: 10 }, 
-    { duration: '40s', target: 55 }, 
-    { duration: '10s', target: 0 },  
+    { duration: '10s', target: 10 }, // Sobe para 10 usuários em 10 segundos
+    { duration: '40s', target: 55 }, // Sobe até 55 usuários e segura o estresse
+    { duration: '10s', target: 0 },  // Desce a rampa limpando as conexões
   ],
 };
 
 export default function () {
-  // Rota apontando para a tarefa que sofrerá a disputa de exclusão
-  // ATENÇÃO: Altere o final (/3) para um ID válido se for rodar de novo
   const url = 'http://localhost:3000/tarefas/3'; 
   
   const params = { 

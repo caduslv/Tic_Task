@@ -15,7 +15,7 @@ export default function () {
 
   const res = http.get(url);
 
-  // Tags alteradas para destacar a Leitura no terminal
+  // exibe no terminal o tipo de rota.
   check(res, {
     'LEITURA (GET) - status e 200': (r) => r.status === 200,
     'LEITURA (GET) - tempo de resposta < 500ms': (r) => r.timings.duration < 500,

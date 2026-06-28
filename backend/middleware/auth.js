@@ -5,21 +5,29 @@ import connection from '../config/db.js';
 
 
 
+
+
+
+
 dotenv.config();
 
 
 
 
-export default function auth(req, res, next) {
-// Força o ID do usuário fake caso o controller de tarefas precise de um req.user.id
-    req.user = { id: 1, nome: 'Cadu Teste', status: 'ativo' }; 
-    
-    // Dá passagem livre imediata para o k6
-    return next(); 
 
-    // O resto do código original fica aqui para baixo (o Node vai ignorar por causa do return acima)
+
+
+
+export default function auth(req, res, next) {
     const authHeader = req.headers.authorization;
 
+
+
+
+
+
+
+
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
         return res.status(401).json({ erro: 'Token não fornecido.' });
     }
@@ -27,9 +35,6 @@ export default function auth(req, res, next) {
 
 
 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.status(401).json({ erro: 'Token não fornecido.' });
-    }
 
 
 
@@ -39,8 +44,16 @@ export default function auth(req, res, next) {
 
 
 
+
+
+
+
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+
+
+
 
 
 
@@ -55,6 +68,10 @@ export default function auth(req, res, next) {
 
 
 
+
+
+
+
             if (results.length === 0) {
                 return res.status(401).json({ erro: 'Usuário não encontrado.' });
             }
@@ -62,7 +79,15 @@ export default function auth(req, res, next) {
 
 
 
+
+
+
+
             const usuario = results[0];
+
+
+
+
 
 
 
@@ -76,9 +101,17 @@ export default function auth(req, res, next) {
 
 
 
+
+
+
+
             req.user = usuario;
             next();
         });
+
+
+
+
 
 
 
@@ -87,6 +120,3 @@ export default function auth(req, res, next) {
         return res.status(401).json({ erro: 'Token inválido ou expirado.' });
     }
 }
-
-
-
