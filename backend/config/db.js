@@ -25,4 +25,7 @@ connection.query('SELECT DATABASE() AS banco', (err, result) => {
   console.log(' BANCO USADO PELO NODE:', result[0].banco);
 });
 
+console.log("DEBUG DB_HOST:", process.env.DB_HOST);
+console.log("DEBUG DB_PORT:", process.env.DB_PORT);
+
 export default connection;
