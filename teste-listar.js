@@ -4,20 +4,29 @@ import { check, sleep } from 'k6';
 export const options = {
   summaryTrendStats: ['avg', 'min', 'med', 'max', 'p(90)', 'p(95)', 'p(99)'],
   stages: [
-    { duration: '10s', target: 10 }, // Sobe para 10 usuários em 10 segundos
-    { duration: '40s', target: 55 }, // Sobe até 55 usuários e segura o estresse
-    { duration: '10s', target: 0 },  // Desce a rampa limpando as conexões
+    { duration: '10s', target: 10 }, 
+    { duration: '40s', target: 55 }, 
+    { duration: '10s', target: 0 },  
   ],
 };
 
 export default function () {
   const url = 'http://localhost:3000/tarefas'; 
+  
+  // Token de autenticação para validar a rota protegida
+  const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJjYWxvcy5lZHU4NkBnbWFpbC5jb20iLCJpYXQiOjE3ODI2NjI2MTEsImV4cCI6MTc4MzI2NzQxMX0.66mhp9Hz1gjoIDHns0MIhnd76BKffAqkPY64jM6qpSg";
+  
+  const params = { 
+    headers: { 
+      'Authorization': `Bearer ${token}` 
+    } 
+  };
 
-  const res = http.get(url);
+  const res = http.get(url, params);
 
-  // exibe no terminal o tipo de rota.
+  // Validação dos resultados
   check(res, {
-    'LEITURA (GET) - status e 200': (r) => r.status === 200,
+    'LEITURA (GET) - status 200': (r) => r.status === 200,
     'LEITURA (GET) - tempo de resposta < 500ms': (r) => r.timings.duration < 500,
   });
 

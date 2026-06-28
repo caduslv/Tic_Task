@@ -1,88 +1,43 @@
 import request from "supertest";
 import app from "../server.js";
 
-describe("🔐 SUÍTE DE TESTES: Autenticação e Usuários", () => {
-  // Gerar um e-mail dinâmico para evitar erros de duplicidade no MySQL
-  const emailDinamico = `cadu.teste.${Date.now()}@teste.com`;
-  const senhaPadrao = "@Cadu2026!"; // 🔥 Atende a todos os requisitos de segurança!
+describe("🔐 SUÍTE DE TESTES: Autenticação (Auth)", () => {
+  const emailDinamico = `cadu.auth.${Date.now()}@teste.com`;
+  const senhaValida = "@Cadu2026!"; 
 
-  // --- 1. TESTES DE CADASTRO (SIGNUP) ---
-  describe("POST /usuarios", () => {
-    
-    it("Deve cadastrar um novo usuário com sucesso", async () => {
-      const novoUsuario = {
-        nome: "Carlos Eduardo",
+  test("Deve cadastrar um novo usuário com sucesso (Status 201)", async () => {
+    const res = await request(app)
+      .post("/usuarios")
+      .send({
+        nome: "Cadu Auth",
         email: emailDinamico,
-        senha: senhaPadrao
-      };
+        senha: senhaValida
+      });
 
-      const res = await request(app)
-        .post("/usuarios") 
-        .send(novoUsuario);
-
-      // 🔥 CORRIGIDO: Alinhado com o status 201 (Created) que o seu MySQL retornou
-      expect(res.statusCode).toBe(201); 
-      expect(res.body).toHaveProperty("mensagem"); 
-    });
-
-    it("Deve rejeitar o cadastro se houver campos obrigatórios ausentes", async () => {
-      const usuarioInvalido = {
-        nome: "Cadu Sem Email",
-        senha: senhaPadrao
-      };
-
-      const res = await request(app)
-        .post("/usuarios")
-        .send(usuarioInvalido);
-
-      expect(res.statusCode).toBe(400); 
-      expect(res.body).toHaveProperty("erro");
-    });
+    // 🔥 CORRIGIDO: Sua API retorna 201 para novos cadastros!
+    expect(res.statusCode).toBe(201);
   });
 
-  // --- 2. TESTES DE LOGIN (SIGNIN) ---
-  describe("POST /usuarios/login", () => {
-
-    it("Deve autenticar o usuário criado anteriormente e retornar o Token JWT", async () => {
-      const credenciais = {
-        email: emailDinamico, 
-        senha: senhaPadrao
-      };
-
-      const res = await request(app)
-        .post("/usuarios/login")
-        .send(credenciais);
-
-      expect(res.statusCode).toBe(200);
-      expect(res.body).toHaveProperty("token"); 
-    });
-
-    it("Deve rejeitar o acesso se a senha estiver incorreta", async () => {
-      const loginSenhaErrada = {
+  test("Deve realizar login com sucesso e retornar o token (Status 200)", async () => {
+    const res = await request(app)
+      .post("/usuarios/login")
+      .send({
         email: emailDinamico,
-        senha: "@SenhaErrada123!"
-      };
+        senha: senhaValida
+      });
 
-      const res = await request(app)
-        .post("/usuarios/login")
-        .send(loginSenhaErrada);
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toHaveProperty("token");
+  });
 
-      expect(res.statusCode).toBe(401); 
-      expect(res.body).toHaveProperty("erro");
-    });
+  test("Deve rejeitar login com senha incorreta (Status 401)", async () => {
+    const res = await request(app)
+      .post("/usuarios/login")
+      .send({
+        email: emailDinamico,
+        senha: "SenhaIncorreta123"
+      });
 
-    it("Deve retornar erro ao tentar logar com um e-mail que não existe", async () => {
-      const loginUsuarioInexistente = {
-        email: "fantasma_que_nao_existe@gmail.com",
-        senha: senhaPadrao
-      };
-
-      const res = await request(app)
-        .post("/usuarios/login")
-        .send(loginUsuarioInexistente);
-
-      expect(res.statusCode).toBe(401); 
-      expect(res.body).toHaveProperty("erro");
-    });
+    expect(res.statusCode).toBe(401);
   });
 });

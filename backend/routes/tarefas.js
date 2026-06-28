@@ -18,9 +18,8 @@ function validarStatus(s) {
     return !s || STATUS_VALIDOS.includes(s);
 }
 
-// ==========================================
-// 1. CRIAR TAREFA (POST) - Sem alterações
-// ==========================================
+
+// 1. CRIAR TAREFA (POST)
 router.post('/', auth, (req, res) => {
     const { titulo, descricao, prazo_execucao, prioridade, categoria_id } = req.body;
     const usuarioId = req.user.id;
@@ -102,9 +101,8 @@ router.post('/', auth, (req, res) => {
     });
 });
 
-// ==========================================
+
 // 2. LISTAR TAREFAS (GET) - Alterado
-// ==========================================
 router.get('/', auth, async (req, res) => {
     const usuarioId = req.user.id;
     const { status, prioridade, categoria_id, q, ordenar, page = 1, limit = 50 } = req.query;
@@ -197,9 +195,8 @@ router.get('/', auth, async (req, res) => {
     });
 });
 
-// ==========================================
+
 // 3. GET POR ID - Sem alterações
-// ==========================================
 router.get('/:id', auth, (req, res) => {
     // Como é SELECT *, a versão já vem automaticamente aqui
     const sql = `SELECT * FROM Tarefas WHERE id = ? AND usuario_id = ?`;
@@ -212,9 +209,7 @@ router.get('/:id', auth, (req, res) => {
     });
 });
 
-// ==========================================
 // 4. ATUALIZAR TAREFA (PATCH) - Alterado
-// ==========================================
 router.patch('/:id', auth, async (req, res) => {
     // MUDANÇA AQUI: Recebendo a 'versao' do req.body
     const { titulo, descricao, prazo_execucao, prioridade, status, categoria_id, versao } = req.body;
@@ -261,14 +256,14 @@ router.patch('/:id', auth, async (req, res) => {
     if (campos.length === 0 && categoria_id === undefined)
         return res.status(400).json({ erro: 'Nada para atualizar.' });
 
-    // MUDANÇA AQUI: Incrementa a versão no banco
+    // Incrementa a versão no banco
     campos.push('versao = versao + 1');
 
     const aplicarUpdate = (categoriaPermitida = true) => {
         if (!categoriaPermitida)
             return res.status(403).json({ erro: 'Categoria não permitida.' });
 
-        // MUDANÇA AQUI: Adicionado o 'AND versao = ?' no WHERE
+        // Adicionado o 'AND versao = ?' no WHERE
         const sql = `
             UPDATE Tarefas SET
             ${campos.join(', ')}
@@ -323,9 +318,7 @@ router.patch('/:id', auth, async (req, res) => {
     }
 });
 
-// ==========================================
 // 5. EXCLUIR TAREFA (DELETE) - Sem alterações
-// ==========================================
 router.delete('/:id', auth, (req, res) => {
     const sql = `DELETE FROM Tarefas WHERE id = ? AND usuario_id = ?`;
 

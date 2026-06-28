@@ -18,17 +18,17 @@ async function enviarTarefaDeTeste(idUsuario, idTarefa, tipoEvento) {
     await redis.lpush('tic-task:queue', JSON.stringify(messagePayload));
     console.log(`[PRODUCER] Evento ${tipoEvento} enviado para a fila para a tarefa ${idTarefa}!`);
   } catch (error) {
-    console.error('❌ Erro no Producer:', error);
+    console.error('Erro no Producer:', error);
   }
 }
 
 async function executar() {
-  console.log('🛫 Disparando tarefas de teste...');
+  console.log(' Disparando tarefas de teste...');
   
   await enviarTarefaDeTeste(762, 1045, 'SYNC_EXTERNAL_CALENDAR');
   await enviarTarefaDeTeste(762, 1046, 'SEND_NOTIFICATION');
   
-  console.log('✅ Todas as tarefas foram postadas na fila!');
+  console.log('Todas as tarefas foram postadas na fila!');
   process.exit(0);
 }
 

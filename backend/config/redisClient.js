@@ -6,11 +6,11 @@ const redis = new Redis(process.env.REDIS_URL || {
 });
 
 redis.on('connect', () => {
-  console.log('🚀 Conectado ao Redis com sucesso!');
+  console.log('Conectado ao Redis com sucesso!');
 });
 
 redis.on('error', (err) => {
-  console.error('❌ Erro na conexão com o Redis:', err);
+  console.error('Erro na conexão com o Redis:', err);
 });
 
 export default redis;
