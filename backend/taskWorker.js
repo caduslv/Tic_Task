@@ -7,7 +7,7 @@ const redis = new Redis({
 
 const MAX_RETRIES = 3;
 
-console.log('🤖 Background Worker iniciado e monitorando a fila do Tic Task...');
+console.log(`🤖 [PID ${process.pid}] Background Worker iniciado e monitorando a fila do Tic Task...`);
 async function limparCacheUsuario(userId){
   if (!userId) return;
   try {
@@ -28,7 +28,9 @@ async function processQueue() {
       const message = JSON.parse(messageJson);
 
       // Log detalhado para cada mensagem recebida da fila com destaque para o ID da tarefa.
-      console.log(`\n📦 [WORKER] Mensagem recebida! Processando tarefa ID: ${message.taskId}`);
+      console.log(`\n📦 [WORKER PID ${process.pid}] Mensagem recebida! Processando tarefa ID: ${message.taskId}`);
+
+
 
       await handleTaskProcessing(message);
 

@@ -4,9 +4,9 @@ import { check, sleep } from 'k6';
 export const options = {
   summaryTrendStats: ['avg', 'min', 'med', 'max', 'p(90)', 'p(95)', 'p(99)'],
   stages: [
-    { duration: '10s', target: 10 }, 
-    { duration: '40s', target: 55 }, 
-    { duration: '10s', target: 0 },  
+    { duration: '1s', target: 1 }, 
+    { duration: '1s', target: 6 }, 
+    { duration: '1s', target: 0 },  
   ],
 };
 
